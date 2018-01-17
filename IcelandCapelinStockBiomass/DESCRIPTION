@@ -1,0 +1,11 @@
+Package: IcelandCapelinStockBiomass
+Title: IcelandCapelinStockBiomass
+Version: 0.0.0.9000
+Authors@R: person("Alejandro", "Buren",
+                      email = "alejandro.buren@dfo-mpo.gc.ca",
+                      role = c("aut", "cre"))
+Description: Calculation of stock biomass using data from ICES 2017 NWWG Report
+Depends: R (>= 3.4.2)
+License: NA
+Encoding: UTF-8
+LazyData: true
