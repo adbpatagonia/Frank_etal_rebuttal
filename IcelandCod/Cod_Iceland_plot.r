@@ -50,14 +50,23 @@ icelandcap <- left_join(abun, meanw, by = c('year', 'age', 'maturity')) %>%
 
 select(icecod17, year, age4.biom) %>%
   left_join(icelandcap) %>%
-  mutate(ratiocapcod = stockbiomass/age4.biom) %>%
+  mutate(ratiocapcod = (stockbiomass*1000000)/age4.biom) %>%
   filter(year > 1977 & year < 1999) %>%
   ggplot(aes(x = year, y = ratiocapcod)) + geom_line()
 
 
 select(icecod, year, SSB) %>%
   left_join(icelandcap) %>%
-  mutate(ratiocapcod = stockbiomass/SSB) %>%
+  mutate(ratiocapcod = (stockbiomass*1000000)/SSB) %>%
   filter(year > 1977 & year < 1999) %>%
   ggplot(aes(x = year, y = ratiocapcod)) + geom_line()
 
+## nl capelin and cod ----
+
+
+nl <- read.csv('cod_capelin_trend.csv', header = T) %>%
+  mutate(ratiocapcod = (cap_bms/1000)/(cod_bms/1000000)) 
+
+
+
+  ggplot(data = nl, aes(x = year, y = ratiocapcod)) + geom_point()
