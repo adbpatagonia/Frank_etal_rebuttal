@@ -14,7 +14,7 @@ left_join(abun, meanw, by = c('year', 'age', 'maturity')) %>%
   mutate(biomass = abun * meanweight * 1e-12) %>%    # stock biomass in million tonnes
   group_by(year) %>%
   summarize(stockbiomass = sum(biomass, na.rm = T)) %>%
-  ggplot(aes(x = year, y = stockbiomass)) + geom_line() + ylab('stock biomass (million tonnes)')
+  ggplot(aes(x = year, y = (stockbiomass) )) + geom_line() + geom_point() + ylab('stock biomass (million tonnes)')
 
 
 icelandcap <- left_join(abun, meanw, by = c('year', 'age', 'maturity')) %>%
