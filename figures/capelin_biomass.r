@@ -67,7 +67,7 @@ p
 
 
 
-save_plot("Fig4.png", p, base_aspect_ratio = 1.8) # make room for figure legend)
+#save_plot("Fig4.png", p, base_aspect_ratio = 1.8) # make room for figure legend)
 
 # 
 # p <- ggplot(data = subset(cb, year > 1990), aes(x = year, y = biomass, group = area, shape = area, color = area))

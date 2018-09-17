@@ -115,7 +115,7 @@ p <- ggplot(data = sub_fits, aes(x = year, y = index, group = survey, shape = su
                         position = position_dodge(width = dg), size = 0.5, na.rm = T, alpha = 0.4)
 
 p <- p + geom_point(position = position_dodge(width = dg), size = 1.5)
-p <- p + geom_line(aes(y = exp(pred_y)))
+#p <- p + geom_line(aes(y = exp(pred_y)))
 
 p <- p + scale_y_log10(label = comma, limits = c(1,10000), breaks = c(1,10,100,1000,10000))
 p <- p + annotation_logticks(sides = "l")
@@ -148,7 +148,7 @@ fits_p <- p
 
 p <- ggplot(data = pro, aes(x = year))
 p <- p + geom_ribbon(aes(ymin = exp(lwr), ymax = exp(upr)), alpha = 0.25)
-p <- p + geom_line(aes(y = exp(est)))
+#p <- p + geom_line(aes(y = exp(est)))
 p <- p + scale_y_log10(labels = comma, limits = c(1,12000), breaks = c(1,10,100,1000,10000))
 p <- p + annotation_logticks(sides = "l")
 p <- p + theme_set(theme_cowplot())
