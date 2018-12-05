@@ -1,0 +1,153 @@
+---
+title: "Center of gravity analysis of 2J3KL capelin"
+# output: word_document
+output: html_document
+bibliography: references.bib
+---
+
+```{r setup, include = FALSE}
+
+knitr::opts_chunk$set(echo = FALSE)
+
+```
+
+
+Center of gravity (CG) metrics have been used in fisheries research for decades to assess shifts in the mean location of fish populations [@rufino2018]. Here we assess the CG of capelin using data from the fall RV trawl survey of 2J3KL conducted by DFO between 1983 to 2016 to assess potential shifts in their population over time. The CG metric used here was calculated by weighting the mean latitudes and longitudes of sets conducted in the survey by abundance:
+
+$$ CG = \frac{\sum_{i = 1}^{n} x_i s_i z_i}{\sum_{i = 1}^{n} s_i z_i}$$
+where $x_i$ represents the coordinates of the sets, $z_i$ is abundance and $s_i$ is the area of influence[@woillez2007]. Given the irregular sampling of the RV survey, the CG indicator was weighted by area of influence, which was calculated using Voronoï tessellation of sets conducted within the survey strata each year [@woillez2009]. The spatial dispersion of the population around its center of gravity (i.e. inertia) was also calculated:
+
+$$ I = \frac{\sum_{i = 1}^{n} (x_i - CG)^2 s_i z_i}{\sum_{i = 1}^{n} s_i z_i}$$
+and this spatial indicator was decomposed into two orthogonal axes describing the maximum and the minimum components of the inertia, and isotrophy (i.e. the shape of the dispersion around the center of gravity) was calculated by taking the square root of the ratio of the maximum and minimum components [@woillez2007]. These calculations were conducted in R [@R2017] using the RGeostats package [@renard2017]. Results from this analysis are shown below in Figures A1 to A3.
+
+
+```{r data, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+library(sf)
+library(plotly)
+
+## Data from "center_of_gracity.R"
+load("cgi_data.RData")
+invisible(list2env(cgi_data, envir = globalenv()))
+sub_cap <- cap[cap$div %in% c("2J", "3K", "3L") & cap$year %in% 1983:2016, ]
+sub_cap <- sub_cap[order(sub_cap$year), ]
+stock_strata <- st_cast(stock_strata, "MULTILINESTRING")
+
+## Set-up focal box for map
+buf_bbox <- bbox <- st_bbox(survey_area)
+buf <- 0
+buf_bbox["xmin"] <- buf_bbox["xmin"] - 2
+buf_bbox["xmax"] <- buf_bbox["xmax"] + buf
+buf_bbox["ymin"] <- buf_bbox["ymin"] - buf
+buf_bbox["ymax"] <- buf_bbox["ymax"] + buf
+survey_box <- st_as_sfc(buf_bbox)
+
+## Map data
+nafo <- read_sf("../../data/NAFO_divisions/Divisions.shp", layer = "Divisions") %>% 
+    st_transform(crs = 4326) # downloaded these data here: http://www.nafo.int/about/frames/area.html
+nafo <- nafo[!is.na(nafo$ZONE), ]
+nafo <- nafo["ZONE"]
+nafo <- st_intersection(nafo, survey_box) %>% 
+    st_cast("LINESTRING")
+
+land <- read_sf("../../data/north_america_base/bound_p.shp", layer = "bound_p") %>%
+    st_transform(crs = 4326)
+land <- land[land$COUNTRY != "water/agua/d'eau", ]
+land <- land["COUNTRY"]
+land <- st_intersection(land, survey_box) %>% 
+    st_cast("POLYGON")
+
+buf_land <- st_buffer(land, dist = 0.05)
+
+```
+
+
+```{r map, message=FALSE, warning=FALSE, out.height = "800px", out.width = "100%", fig.cap = "**Figure A1.** Annual bubble plots of the number of capelin caught in the Fall RV survey from 1983 to 2016. Center of gravity (x) and inertia (shaded area) is shown for the survey in red and for capelin in blue."}
+
+## Plot by scaled number
+sub_cap <- sub_cap %>% 
+    group_by(year) %>% 
+    mutate(scaled_number = number / mean(number)) %>% ungroup()
+
+plot_ly(showlegend = FALSE) %>% 
+    add_sf(data = sub_cap, frame = ~year, size = ~scaled_number, 
+           marker = list(color = toRGB("black", 0.8), 
+                         line = list(color = toRGB("white"))),
+           sizes = c(2, 1000), text = ~round(number),
+           hoverinfo = "text", showlegend = FALSE) %>% 
+    add_sf(data = cap_ellipse, frame = ~year, 
+           fillcolor = toRGB("steelblue", 0.3), line = list(width = 0),
+           hoverinfo = "skip") %>% 
+    add_sf(data = cap_center, frame = ~year, color = I("steelblue"),
+           symbol = I(4), hoverinfo = "x+y") %>% 
+    add_sf(data = survey_ellipse, frame = ~year, 
+           fillcolor = toRGB("firebrick2", 0.3), line = list(width = 0),
+           hoverinfo = "skip") %>% 
+    add_sf(data = survey_center, frame = ~year, color = I("firebrick2"),
+           symbol = I(4), hoverinfo = "x+y") %>% 
+    add_sf(data = st_simplify(nafo, dTolerance = 0.01), 
+           color = I("grey"), line = list(width = 0.5),
+           fillcolor = "transparent", hoverinfo = "skip", name = "NAFO") %>%
+    add_sf(data =  st_simplify(stock_strata, dTolerance = 0.01) %>% st_cast("MULTILINESTRING"), 
+           line = list(width = 0.5, color = toRGB("grey", 0.3)),
+           fillcolor = "transparent", hoverinfo = "skip", name = "Strata") %>%
+    add_sf(data = land, color = I("grey"), 
+           line = list(width = 0.5), hoverinfo = "skip", name = "Land") %>% 
+    animation_opts(frame = 1000, transition = 1)
+
+
+```
+
+
+```{r trend, message=FALSE, warning=FALSE, out.height = "800px", out.width = "100%", fig.cap = "**Figure A2.** Trend in the longitude and latitude of the center of gravity of the survey and capelin."}
+
+cap_xy <- st_coordinates(cap_center)
+survey_xy <- st_coordinates(survey_center)
+
+x <- plot_ly(x = cap_center$year) %>% 
+    add_lines(y = cap_xy[, "X"], color = I("steelblue"), 
+              name = "Capelin", legendgroup = "Capelin") %>% 
+    add_lines(y = survey_xy[, "X"], color = I("firebrick1"), 
+              name = "Survey", legendgroup = "Survey") %>% 
+    layout(xaxis = list(title = "Year"),
+           yaxis = list(title = "Longitude"))
+
+y <- plot_ly(x = cap_center$year, showlegend = FALSE) %>% 
+    add_lines(y = cap_xy[, "Y"], color = I("steelblue"), 
+              name = "Capelin", legendgroup = "Capelin") %>% 
+    add_lines(y = survey_xy[, "Y"], color = I("firebrick1"), 
+              name = "Survey", legendgroup = "Survey") %>% 
+    layout(xaxis = list(title = "Year"),
+           yaxis = list(title = "Latitude"))
+
+subplot(x, y, nrows = 2, shareX = TRUE, titleX = TRUE, titleY = TRUE)
+
+```
+
+
+```{r min-dist, message=FALSE, warning=FALSE, out.height = "400px", out.width = "100%", fig.cap = "**Figure A3.** Trend in the minimum distance between the coast of Newfoundland and Labrador to the center of gravity of capelin."}
+
+## Calculate nearest neighbour
+coast <- land %>% st_cast("POINT") %>% 
+    st_transform(32622) # utm zone 22
+cg <- cap_center %>% 
+    st_transform(32622)
+
+
+min_dist <- sapply(seq_len(nrow(cg)), function(i) {
+    min(st_distance(coast, cg[i, ]))
+})
+
+plot_ly(x = cg$year, y = min_dist / 1000) %>% 
+    add_lines(color = I("steelblue")) %>% 
+    layout(xaxis = list(title = "Year"),
+           yaxis = list(title = "Distance between CG and coast (km)"))
+
+```
+
+
+# References
+
+
+
+
