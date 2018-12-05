@@ -143,7 +143,7 @@ p
 
 p <- p + guides(shape = guide_legend(override.aes = list(linetype = c(0, 0, 1, 1, 1))))
 
-save_plot("figures/Fig4_v2.png", p, base_aspect_ratio = 1.8) # make room for figure legend)
+save_plot("figures/biomass_trends.png", p, base_aspect_ratio = 1.8) # make room for figure legend)
 
 
 
