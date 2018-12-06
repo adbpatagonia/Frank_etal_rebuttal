@@ -1,5 +1,5 @@
 
-source("analysis/map_data.R")
+source("figures/map/map_data.R")
 
 
 nafo_map <- function(xlim = c(-62, -44), ylim = c(42.7, 55)) {
