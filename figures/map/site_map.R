@@ -79,23 +79,38 @@ plot(tb_transects[1:9], add = TRUE, col = "red")
 
 cols <- head(viridis::inferno(6), 5)
 
+survey_map <- function() {
+    nafo_map()
+    plot(fall_transects, add = TRUE, col = cols[3], lwd = 2, lty = 1)
+    plot(ussr_transects, add = TRUE, col = cols[5], lwd = 2, lty = 1)
+    plot(sp_transects, add = TRUE, col = cols[2], lwd = 2, lty = 1)
+    plot(spring_ussr_transects, add = TRUE, col = cols[4], lwd = 2, lty = 1)
+    plot(tb_transects[1:9], add = TRUE, col = cols[1], lwd = 2, lty = 1)
+    with(bay_labs, shadowtext(x, y, lab, srt = 45, pos = pos, cex = 0.75, offset = 0))
+    with(land_labs, shadowtext(x, y, lab))
+    with(shelf_labs, shadowtext(x, y, lab))
+    shadowtext(nafo_centroids$X, nafo_centroids$Y, nafo_centroids$ZONE, cex = 0.75, col = "black")
+    legend("topright", legend = c("2J3K Fall Canada", '2J3K Fall USSR',
+                                  "3L Spring Canada", "3LNO Spring USSR",
+                                  'Trinity Bay (3L)'),
+           lty = 1, lwd = 2, col = cols[c(3, 5, 2, 4, 1)], seg.len = 2)
+    box()
+}
+
 ## make survey area map
 png("figures/survey_map.png", units = "in", res = 600, height = 7, width = 7.1)
-nafo_map()
-plot(fall_transects, add = TRUE, col = cols[3], lwd = 2, lty = 1)
-plot(ussr_transects, add = TRUE, col = cols[5], lwd = 2, lty = 1)
-plot(sp_transects, add = TRUE, col = cols[2], lwd = 2, lty = 1)
-plot(spring_ussr_transects, add = TRUE, col = cols[4], lwd = 2, lty = 1)
-plot(tb_transects[1:9], add = TRUE, col = cols[1], lwd = 2, lty = 1)
-with(bay_labs, shadowtext(x, y, lab, srt = 45, pos = pos, cex = 0.75, offset = 0))
-with(land_labs, shadowtext(x, y, lab))
-with(shelf_labs, shadowtext(x, y, lab))
-shadowtext(nafo_centroids$X, nafo_centroids$Y, nafo_centroids$ZONE, cex = 0.75, col = "black")
-legend("topright", legend = c("2J3K Fall Canada", '2J3K Fall USSR',
-                              "3L Spring Canada", "3LNO Spring USSR",
-                              'Trinity Bay (3L)'),
-       lty = 1, lwd = 2, col = cols[c(3, 5, 2, 4, 1)], seg.len = 2)
-box()
+survey_map()
 dev.off()
 
+postscript("figures/survey_map.eps", height = 7, width = 7.1)
+survey_map()
+dev.off()
 
+png("figures/survey_map_alternative.png", units = "in", res = 600, height = 7, width = 7.1)
+cols <- head(viridis::viridis(6), 5)
+survey_map()
+dev.off()
+
+postscript("figures/survey_map_alternative.eps", height = 7, width = 7.1)
+survey_map()
+dev.off()
