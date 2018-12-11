@@ -16,6 +16,8 @@ age <- read.csv('data/Fig3c_AgeClasses.csv')
 seasbio <- read.csv('data/Fig3a_SeasonalBiomass.csv')
 
 # data wrangling ----
+# capelin densities ----
+seasbio$density <- with(seasbio, biomass.kg./surveyareakm2)
 # * order of maturities ----
 mat <- transform(mat,
                 maturity = factor(maturity,levels=c(
@@ -51,9 +53,9 @@ seasbio <- transform(seasbio,
 
 # * plot a, seasonal biomass ----
 laby <- expression('Biomass (kg '~km^-2~')')
-pa <- ggplot(data = seasbio, aes(x = Month, y = biomass.kg.)) +
+pa <- ggplot(data = seasbio, aes(x = Month, y = density)) +
   geom_col(fill = 'black') +
-  scale_y_log10(labels = comma, limits = c(1,14000), breaks = c(1,10,100,1000,10000)) +
+#  scale_y_log10(labels = comma, limits = c(1,14000), breaks = c(1,10,100,1000,10000)) +
   
   xlab('') +
   ylab(laby) +
@@ -65,9 +67,9 @@ pa <- ggplot(data = seasbio, aes(x = Month, y = biomass.kg.)) +
         axis.line = element_line(color = 'black')) 
 
 # add log ticks
-a <- annotation_logticks(sides='l')
-a$data <- data.frame(x = NA, Year = '2003')
-pa <- pa + a
+# a <- annotation_logticks(sides='l')
+# a$data <- data.frame(x = NA, Year = '2003')
+# pa <- pa + a
 
 # * plot c, age class ----
 pb <- ggplot(data = mat, aes(x = month, y = prop, fill = maturity)) +
