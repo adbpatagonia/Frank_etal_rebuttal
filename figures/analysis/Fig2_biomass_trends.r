@@ -65,7 +65,7 @@ custom_breaks <- 1975:2017
 # plot in revied manuscript ----
 #mypalette <- head(viridis::inferno(6), 5)
 mypalette <- head(viridis::viridis(6), 5)
-mypalette <- mypalette[c(2, 5, 3, 4, 1)]
+mypalette <- mypalette[c(3, 5, 2, 4, 1)]
 
 p <- ggplot(data = cb, aes(x = year, y = biomass, group = area, shape = area, color = area))
 p <- p + geom_linerange(aes(ymin = (lcl), ymax = (ucl)), 
