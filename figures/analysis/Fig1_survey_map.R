@@ -106,7 +106,7 @@ survey_map <- function() {
 
 cols <- head(viridis::inferno(6), 5)
 
-png("output/Fig1_survey_map.png", units = "in", res = 600, height = 7, width = 7.1)
+png("output/Fig1_survey_map_ADB_Dec12.png", units = "in", res = 600, height = 7, width = 7.1)
 survey_map()
 dev.off()
 
