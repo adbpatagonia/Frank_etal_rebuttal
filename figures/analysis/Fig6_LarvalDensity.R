@@ -25,11 +25,12 @@ dens <- transform(dens,
 # plot ----
 
 # * plot a, seasonal biomass ----
-laby <- expression('#Capelin larvae '~m^-2)
+laby <- expression('Average capelin larval density ('~m^-2~')')
 p <- ggplot(data = dens, aes(x = factor(year), y = density)) +
-  geom_col(fill = 'black') +
+  geom_col(fill = 'grey60') +
  # scale_y_log10(labels = comma, limits = c(1,14000), breaks = c(1,10,100,1000,10000)) +
-  
+  geom_errorbar(aes( ymin = density - 2*SE, ymax = density + 2*SE),
+                                width = 0) +
   xlab('Year') +
   ylab(laby) +
   facet_grid(~period, scales = 'free_x', switch = 'x', space = 'free_x') +

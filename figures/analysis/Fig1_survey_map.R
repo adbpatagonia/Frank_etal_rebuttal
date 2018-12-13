@@ -2,9 +2,12 @@
 library(sf)     
 library(raster)
 library(ggplot2)
+library(here)
 
 load("data/Fig1_map_data.RData")
 source("R/shadow_text.R")
+
+bathy@file@name <- here::here('data-raw/GEBCO/NAFO_GEBCO_data.nc')
 
 nafo_map <- function(xlim = c(-62, -44), ylim = c(42.7, 55)) {
     par(mar = c(2.5, 2.5, 1, 1))
