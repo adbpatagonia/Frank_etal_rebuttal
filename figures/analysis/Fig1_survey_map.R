@@ -9,10 +9,14 @@ source("R/shadow_text.R")
 
 bathy@file@name <- here::here('data-raw/GEBCO/NAFO_GEBCO_data.nc')
 
+# ADB. Jan 3, 2019. sf was not plotting the transects. Fixed it by including reset=FALSE to the first plot, i.e. nafo_map
+# solution found here: edzer commented on Aug 22, 2018
+# https://github.com/r-spatial/sf/issues/222
+
 nafo_map <- function(xlim = c(-62, -44), ylim = c(42.7, 55)) {
     par(mar = c(2.5, 2.5, 1, 1))
     plot(na_land["COUNTRY"], main = "", xlim = xlim, ylim = ylim, 
-         col = "grey", border = "grey50", axes = TRUE, lwd = 0.1)
+         col = "grey", border = "grey50", axes = TRUE, lwd = 0.1, reset = FALSE) 
     contour(bathy, add = TRUE, col = "lightgrey", levels = -c(200, 500, 1000, 2000),
             lwd = 0.5)
     plot(nafo["ZONE"], add = TRUE, col = NA, border = "grey50",
