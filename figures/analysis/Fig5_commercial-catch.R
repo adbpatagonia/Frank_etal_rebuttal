@@ -73,6 +73,14 @@ inshore.count.purge <- inshore.count.merge[which(!inshore.count.merge$year %in% 
 # join the data
 allyears <- rbind(inshore.count.purge,recent.count.merge)
 
+allyears <- allyears %>%
+  transform(age.grp = factor(age.grp,
+                             levels = rev(c("Age 1",
+                                        "Age 2",
+                                        "Age 3",
+                                        "Age 4",
+                                        "Age 5",
+                                        "Age 6"))))
 
 # make our plot
 # Div 3L plot
@@ -107,11 +115,20 @@ g2 <- ggplotGrob(p1)
 
 g <- rbind(g1,g2,size="first")
 g$widths <- unit.pmax(g1$widths,g2$widths)
-pdf(file="E:\\Capelin\\commercial\\agecomposition3k3l.pdf",width = 6.14,height=7.09)
+pdf(file="output/Fig5_agecomposition3k3l.pdf",width = 6.14,height=7.09)
 grid.newpage()
 grid.draw(g)
 dev.off()
 
 # just for kicks, using facet instead...
-p3  <-  ggplot() + geom_bar(aes(y = prop, x = year, fill = age.grp), data = allyears,stat="identity")+scale_y_continuous(limits=c(0,1.01),expand=c(0,0))+scale_x_continuous(limits=c(1979.5,2017.5),expand=c(0,0))+theme_classic()+labs(x="Year",y="Proportion",fill="Age")+ggtitle("Inshore commercial - Division 3L")+theme(axis.text = element_text(face="bold",size=12),axis.title=element_text(face="bold",size=16),legend.title=element_text(face="bold",size=14),legend.text=element_text(size=12),axis.ticks=element_line(size=2))+facet_grid(area~.)
+p3  <-  ggplot() + 
+  geom_bar(aes(y = prop, x = year, fill = age.grp), data = allyears,stat="identity") + 
+  scale_y_continuous(limits=c(0,1.01),expand=c(0,0)) +
+  scale_x_continuous(limits=c(1979.5,2017.5),expand=c(0,0)) +
+  theme_classic() + 
+  labs(x="Year",y="Proportion",fill="Age") +
+  ggtitle("Inshore commercial - Division 3L") + 
+  theme(axis.text = element_text(face="bold",size=12),axis.title=element_text(face="bold",size=16),
+        legend.title=element_text(face="bold",size=14),legend.text=element_text(size=12),axis.ticks=element_line(size=2)) +
+  facet_grid(area~.)
 p3

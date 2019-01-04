@@ -71,7 +71,7 @@ pa <- ggplot(data = seasbio, aes(x = Month, y = density)) +
 # a$data <- data.frame(x = NA, Year = '2003')
 # pa <- pa + a
 
-# * plot c, age class ----
+# * plot b, maturity class ----
 pb <- ggplot(data = mat, aes(x = month, y = prop, fill = maturity)) +
   geom_col(width = 0.5) +
   scale_fill_viridis_d(option = 'D', name = '') +
@@ -82,9 +82,10 @@ pb <- ggplot(data = mat, aes(x = month, y = prop, fill = maturity)) +
   theme(legend.position = 'top')
 
 # * plot c, age class ----
+cols <- viridis::viridis(6)[2:6]
 pc <- ggplot(data = age, aes(x = month, y = prop, fill = age)) +
   geom_col(width = 0.5) +
-  scale_fill_viridis_d(option = 'D', name = '') +
+  scale_fill_manual(values = cols, name = '') +
   xlab('Month') +
   ylab('Proportion') +
   scale_y_continuous(breaks = c(0, 0.5, 1)) +
