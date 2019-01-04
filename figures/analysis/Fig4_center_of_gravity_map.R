@@ -7,6 +7,8 @@ load("data/Fig1_map_data.RData")
 load("../CenterOfGravity/cgi_data.RData")
 source("R/shadow_text.R")
 
+bathy@file@name <- here::here('data-raw/GEBCO/NAFO_GEBCO_data.nc')
+
 xlim <- c(-60, -48)
 ylim <- c(46.5, 54.5)
 
@@ -22,7 +24,7 @@ cgi_map <- function() {
     plot(strata[, "STRAT"], main = "",
          col = ifelse(strata$Strat_Type == "InshoreNew", "#fddbc7", "NA"), 
          border = "white", 
-         lwd = 0.4, xlim = xlim, ylim = ylim, axes = TRUE)
+         lwd = 0.4, xlim = xlim, ylim = ylim, axes = TRUE, reset = FALSE)
     plot(blind_spot_ll, col = "#f4a582", add = TRUE, border = "white", lwd = 0.4)
     contour(bathy, add = TRUE, col = "lightgrey", levels = -c(200, 500, 1000, 2000),
             lwd = 0.5)
@@ -65,24 +67,24 @@ cgi_map <- function() {
     
 }
 
-cols <- rev(viridis::inferno(length(z) + 10)) %>% tail(n = length(z))
-
-png("output/Fig4_center_of_gravity_map.png", units = "in", res = 600, height = 7, width = 7)
-cgi_map()
-dev.off()
-
-postscript("output/Fig4_center_of_gravity_map.eps", height = 7, width = 7)
-cgi_map()
-dev.off()
+# cols <- rev(viridis::inferno(length(z) + 10)) %>% tail(n = length(z))
+# 
+# png("output/Fig4_center_of_gravity_map.png", units = "in", res = 600, height = 7, width = 7)
+# cgi_map()
+# dev.off()
+# 
+# postscript("output/Fig4_center_of_gravity_map.eps", height = 7, width = 7)
+# cgi_map()
+# dev.off()
 
 
 cols <- rev(viridis::viridis(length(z) + 10)) %>% tail(n = length(z))
 
-png("output/Fig4_center_of_gravity_map-alternative.png", units = "in", res = 600, height = 7, width = 7)
+png("output/Fig4_center_of_gravity_map-alternative_adb.png", units = "in", res = 600, height = 7, width = 7)
 cgi_map()
 dev.off()
 
-postscript("output/Fig4_center_of_gravity_map-alternative.eps", height = 7, width = 7)
-cgi_map()
-dev.off()
+# postscript("output/Fig4_center_of_gravity_map-alternative.eps", height = 7, width = 7)
+# cgi_map()
+# dev.off()
 
