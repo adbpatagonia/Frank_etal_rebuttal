@@ -90,7 +90,7 @@ pc <- ggplot(data = age, aes(x = month, y = prop, fill = age)) +
   ylab('Proportion') +
   scale_y_continuous(breaks = c(0, 0.5, 1)) +
   theme_sleek() +
-  theme(legend.position = 'top')
+  theme(legend.position = 'top') 
 
 
 # * join plots ----

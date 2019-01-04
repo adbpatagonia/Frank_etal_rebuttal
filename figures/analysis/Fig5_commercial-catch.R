@@ -2,9 +2,10 @@
 
 library(plyr)
 library(tidyr)
-library(ggplot2)
+library(cowplot)
 library(gtable)
 library(grid)
+library(ggsidekick)
 
 # load data sets...
 # first contains older data
@@ -88,47 +89,71 @@ p1  <-  ggplot() +
   geom_bar(aes(y = prop, x = year, fill = age.grp), data = allyears[which(allyears$area=="3L"),],stat="identity") + 
   scale_y_continuous(limits=c(0,1.01),expand=c(0,0), breaks = c(0, 0.5, 1)) +
   scale_x_continuous(limits=c(1979.5,2017.5),expand=c(0,0)) +
-  theme_classic() +
-  labs(x="Year",y="Proportion",fill="Age") +
-  ggtitle("Inshore commercial - Division 3L") +
-  theme(axis.text = element_text(face="bold",size=12),axis.title=element_text(face="bold",size=16),
-        legend.title=element_text(face="bold",size=14),legend.text=element_text(size=12),axis.ticks=element_line(size=2)) +
-  scale_fill_viridis_d()
-p1
+  theme_sleek() +
+  labs(x="Year",y="Proportion",fill="") +
+  ggtitle("NAFO Division 3L") +
+  # theme(axis.text = element_text(face="bold",size=12),axis.title=element_text(face="bold",size=16),
+  #       legend.title=element_text(face="bold",size=14),legend.text=element_text(size=12),axis.ticks=element_line(size=2)) +
+  scale_fill_viridis_d() +
+  theme(legend.position = "top") + 
+  guides(fill = guide_legend(nrow=1, byrow=TRUE))
 
 # Div 3K plot
 p2  <-  ggplot() + geom_bar(aes(y = prop, x = year, fill = (age.grp)), data = allyears[which(allyears$area=="3K"),],
                           stat="identity") +
   scale_y_continuous(limits=c(0,1.01),expand=c(0,0), breaks = c(0, 0.5, 1)) +
   scale_x_continuous(limits=c(1979.5,2017.5),expand=c(0,0)) +
-  theme_classic() +
-  labs(x="Year",y="Proportion",fill="Age") +
-  ggtitle("Inshore commercial - Division 3K") +
-  theme(axis.text = element_text(face="bold",size=12),axis.title=element_text(face="bold",size=16),
-        legend.title=element_text(face="bold",size=14),legend.text=element_text(size=12),axis.ticks=element_line(size=2)) +
-  scale_fill_viridis_d()
-p2
+  theme_sleek() +
+  labs(x="",y="Proportion",fill="") +
+  ggtitle("NAFO Division 3K") +
+ # theme(axis.text = element_text(face="bold",size=12),axis.title=element_text(face="bold",size=16),
+  #      legend.title=element_text(face="bold",size=14),legend.text=element_text(size=12),axis.ticks=element_line(size=2)) +
+  scale_fill_viridis_d() +
+  theme(legend.position="none")
 
-# reorganize stuff to put them onto a single plot
-g1 <- ggplotGrob(p2)
-g2 <- ggplotGrob(p1)
+# arrange plots ----
+# * plots with no legends ----
+prow <- cowplot::plot_grid(p2, p1 + theme(legend.position="none"),  ncol = 1, labels = 'auto')#rel_heights = c(.9, 0.9, 1))
 
-g <- rbind(g1,g2,size="first")
-g$widths <- unit.pmax(g1$widths,g2$widths)
-pdf(file="output/Fig5_agecomposition3k3l.pdf",width = 6.14,height=7.09)
-grid.newpage()
-grid.draw(g)
+# * get legend ----
+legend <- get_legend(p1)
+# * add legend to plot ----
+p <- plot_grid(legend, prow,  ncol = 1, rel_heights = c(.3, 3))
+p
+
+
+# save plots ----
+# * widht and height of plot ----
+w <- 5
+h <- 6.3
+# * png ----
+cowplot::ggsave("output/Fig5_Comm_catch_age_composition.png", p, width = w, height = h)
+# * eps ----
+setEPS()
+postscript("output/Fig5_Comm_catch_age_composition.eps", width = w, height = h)
+p
 dev.off()
 
-# just for kicks, using facet instead...
-p3  <-  ggplot() + 
-  geom_bar(aes(y = prop, x = year, fill = age.grp), data = allyears,stat="identity") + 
-  scale_y_continuous(limits=c(0,1.01),expand=c(0,0)) +
-  scale_x_continuous(limits=c(1979.5,2017.5),expand=c(0,0)) +
-  theme_classic() + 
-  labs(x="Year",y="Proportion",fill="Age") +
-  ggtitle("Inshore commercial - Division 3L") + 
-  theme(axis.text = element_text(face="bold",size=12),axis.title=element_text(face="bold",size=16),
-        legend.title=element_text(face="bold",size=14),legend.text=element_text(size=12),axis.ticks=element_line(size=2)) +
-  facet_grid(area~.)
-p3
+# # reorganize stuff to put them onto a single plot
+# g1 <- ggplotGrob(p2)
+# g2 <- ggplotGrob(p1)
+# 
+# g <- rbind(g1,g2,size="first")
+# g$widths <- unit.pmax(g1$widths,g2$widths)
+# pdf(file="output/Fig5_agecomposition3k3l.pdf",width = 6.14,height=7.09)
+# grid.newpage()
+# grid.draw(g)
+# dev.off()
+# 
+# # just for kicks, using facet instead...
+# p3  <-  ggplot() + 
+#   geom_bar(aes(y = prop, x = year, fill = age.grp), data = allyears,stat="identity") + 
+#   scale_y_continuous(limits=c(0,1.01),expand=c(0,0)) +
+#   scale_x_continuous(limits=c(1979.5,2017.5),expand=c(0,0)) +
+#   theme_sleek() + 
+#   labs(x="Year",y="Proportion",fill="Age") +
+#   ggtitle("Inshore commercial - Division 3L") + 
+#   theme(axis.text = element_text(face="bold",size=12),axis.title=element_text(face="bold",size=16),
+#         legend.title=element_text(face="bold",size=14),legend.text=element_text(size=12),axis.ticks=element_line(size=2)) +
+#   facet_grid(area~.)
+# p3
