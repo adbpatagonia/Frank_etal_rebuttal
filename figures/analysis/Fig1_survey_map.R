@@ -90,10 +90,10 @@ plot(tb_transects[1:9], add = TRUE, col = "red")
 
 survey_map <- function() {
     nafo_map()
-    plot(fall_transects, add = TRUE, col = cols[3], lwd = 2, lty = 1)
+    plot(fall_transects, add = TRUE, col = cols[2], lwd = 2, lty = 1)
     plot(ussr_transects, add = TRUE, col = cols[5], lwd = 2, lty = 1)
     plot(sp_transects, add = TRUE, col = cols[4], lwd = 2, lty = 1)
-    plot(spring_ussr_transects, add = TRUE, col = cols[2], lwd = 2, lty = 1)
+    plot(spring_ussr_transects, add = TRUE, col = cols[3], lwd = 2, lty = 1)
     plot(tb_transects[1:9], add = TRUE, col = cols[1], lwd = 2, lty = 1)
     with(bay_labs, shadowtext(x, y, lab, srt = 45, pos = pos, cex = 0.75, offset = 0))
     with(land_labs, shadowtext(x, y, lab))
@@ -102,7 +102,7 @@ survey_map <- function() {
     legend("topright", legend = c("2J3K Fall Canada", '2J3K Fall USSR',
                                   "3L Spring Canada", "3LNO Spring USSR",
                                   'Trinity Bay (3L)'),
-           lty = 1, lwd = 2, col = cols[c(3, 5, 4, 2, 1)], seg.len = 2)
+           lty = 1, lwd = 2, col = cols[c(2, 5, 4, 3, 1)], seg.len = 2)
     box()
 }
 
