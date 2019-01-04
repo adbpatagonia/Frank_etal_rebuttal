@@ -52,7 +52,7 @@ seasbio <- transform(seasbio,
 # plot ----
 
 # * plot a, seasonal biomass ----
-laby <- expression('Biomass (kg '~km^-2~')')
+laby <- expression('Biomass density (kg '~km^-2~')')
 pa <- ggplot(data = seasbio, aes(x = Month, y = density)) +
   geom_col(fill = 'black') +
 #  scale_y_log10(labels = comma, limits = c(1,14000), breaks = c(1,10,100,1000,10000)) +
@@ -94,13 +94,13 @@ pc <- ggplot(data = age, aes(x = month, y = prop, fill = age)) +
 
 
 # * join plots ----
-p <- cowplot::plot_grid(pa, pb, pc, ncol = 1, labels = 'auto')#rel_heights = c(.9, 0.9, 1))
+p <- cowplot::plot_grid(pa, pb, pc, ncol = 1, labels = 'auto', hjust = -0.01, axis = 'r')#rel_heights = c(.9, 0.9, 1))
 
 
 # save plots ----
 # * widht and height of plot ----
-w <- 5
-h <- 8
+w <- 6
+h <- 9
 # * png ----
 cowplot::ggsave("output/Fig3_seasonal_biomass.png", p, width = w, height = h)
 # * eps ----
