@@ -43,14 +43,14 @@ buf_bbox["ymax"] <- buf_bbox["ymax"] + buf
 survey_box <- st_as_sfc(buf_bbox)
 
 ## Map data
-nafo <- read_sf("../../data/NAFO_divisions/Divisions.shp", layer = "Divisions") %>% 
+nafo <- read_sf("../figures/data-raw/NAFO_divisions/Divisions.shp", layer = "Divisions") %>% 
     st_transform(crs = 4326) # downloaded these data here: http://www.nafo.int/about/frames/area.html
 nafo <- nafo[!is.na(nafo$ZONE), ]
 nafo <- nafo["ZONE"]
 nafo <- st_intersection(nafo, survey_box) %>% 
     st_cast("LINESTRING")
 
-land <- read_sf("../../data/north_america_base/bound_p.shp", layer = "bound_p") %>%
+land <- read_sf("../figures/data-raw/north_america/bound_p.shp", layer = "bound_p") %>%
     st_transform(crs = 4326)
 land <- land[land$COUNTRY != "water/agua/d'eau", ]
 land <- land["COUNTRY"]

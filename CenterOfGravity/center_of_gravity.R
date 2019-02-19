@@ -30,7 +30,7 @@ cgi_to_ellipse <- function(cgi) {
 }
 
 ## Read data and simplify names
-cap <- fread("CenterOfGravity/Fall_MS_catches_of_capelin_all_set_types_1978-2016.csv")
+cap <- fread("CenterOfGravity/Fall_MS_catches_of_capelin_All_1978-2017_dup_removed.csv")
 names(cap) <- tolower(names(cap))
 setnames(cap, c("surveyyear", "commonname", "std_number", "std_weight"), 
               c(      "year",       "name",     "number",     "weight"))
