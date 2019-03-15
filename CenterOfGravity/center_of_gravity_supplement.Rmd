@@ -62,7 +62,7 @@ buf_land <- st_buffer(land, dist = 0.05)
 ```
 
 
-```{r map, message=FALSE, warning=FALSE, out.height = "800px", out.width = "100%", fig.cap = "Fig. S1.  Annual bubble plots of the number of capelin caught in the Fall RV survey from 1983 to 2016. Center of gravity (x) and inertia (shaded area) is shown for the survey in red and for capelin in blue."}
+```{r map, message=FALSE, warning=FALSE, out.height = "800px", out.width = "100%", fig.cap = "Fig. S3.  Annual bubble plots of the number of capelin caught in the Fall RV survey from 1983 to 2016. Center of gravity (x) and inertia (shaded area) is shown for the survey in red and for capelin in blue."}
 
 ## Plot by scaled number
 sub_cap <- sub_cap %>% 
@@ -99,7 +99,7 @@ plot_ly(showlegend = FALSE) %>%
 ```
 
 
-```{r trend, message=FALSE, warning=FALSE, out.height = "800px", out.width = "100%", fig.cap = "Fig. S2.  Trend in the longitude and latitude of the center of gravity of the survey and capelin."}
+```{r trend, message=FALSE, warning=FALSE, out.height = "800px", out.width = "100%", fig.cap = "Fig. S4.  Trend in the longitude and latitude of the center of gravity of the survey and capelin."}
 
 cap_xy <- st_coordinates(cap_center)
 survey_xy <- st_coordinates(survey_center)
@@ -125,7 +125,7 @@ subplot(x, y, nrows = 2, shareX = TRUE, titleX = TRUE, titleY = TRUE)
 ```
 
 
-```{r min-dist, message=FALSE, warning=FALSE, out.height = "400px", out.width = "100%", fig.cap = "Fig. S3.  Trend in the minimum distance between the coast of Newfoundland and Labrador to the center of gravity of capelin."}
+```{r min-dist, message=FALSE, warning=FALSE, out.height = "400px", out.width = "100%", fig.cap = "Fig. S5.  Trend in the minimum distance between the coast of Newfoundland and Labrador to the center of gravity of capelin."}
 
 ## Calculate nearest neighbour
 coast <- land %>% st_cast("POINT") %>% 
